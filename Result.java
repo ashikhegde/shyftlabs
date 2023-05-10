@@ -1,14 +1,16 @@
 public class Result {
-    private Connection conn; // database connection object
+    private Connection conn; 
     
-    // constructor to initialize the database connection
     public Result() {
-        conn = /* your code to establish connection to the database */;
+    String url = "jdbc:mysql://localhost:3306/mydb";
+    String username = "root";
+    String password = "mypassword";
+
+    conn = DriverManager.getConnection(url, username, password);
     }
     
-    // method to add a new result to the database
     public void addResult(String courseName, String studentName, String score) {
-        // SQL query to insert the new result into the database
+
         String sql = "INSERT INTO results (course_name, student_name, score) VALUES (?, ?, ?)";
         
         try {
@@ -23,7 +25,6 @@ public class Result {
             // execute the SQL query
             int rowsAffected = stmt.executeUpdate();
             
-            // check if the query was successful and display a notification to the user
             if (rowsAffected > 0) {
                 System.out.println("New result added for " + studentName + " in " + courseName + ".");
             } else {
