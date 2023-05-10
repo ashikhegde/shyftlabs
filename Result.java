@@ -36,4 +36,24 @@ public class Result {
             e.printStackTrace();
         }
     }
+    
+     public void display() {
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT course_name, student_name, score FROM results");
+
+            System.out.println("Course\t\tStudent\t\tScore");
+            System.out.println("---------------------------------------");
+            while (rs.next()) {
+                String courseName = rs.getString("course_name");
+                String studentName = rs.getString("student_name");
+                String score = rs.getString("score");
+                System.out.println(courseName + "\t" + studentName + "\t" + score);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println("Error displaying results: " + e.getMessage());
+        }
+    }
 }
