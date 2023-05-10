@@ -1,35 +1,45 @@
-public class CourseDao {
+public class CourseDAO {
     private Connection conn;
-    
-    public CourseDao() {
-     // Initialize the database connection
+
+    public CourseDAO() {
     String url = "jdbc:mysql://localhost:3306/mydb";
     String username = "root";
     String password = "mypassword";
 
-conn = DriverManager.getConnection(url, username, password);
-        conn = /* your code to establish connection to the database */;
+    conn = DriverManager.getConnection(url, username, password);
+
     }
-    
-    // Method to add a new course to the database
-    public boolean addCourse(Course course) {
-        try {
-            // Prepare the SQL query
-            String sql = "INSERT INTO courses (course_name) VALUES (?)";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            
-            // Set the parameters for the query
-            statement.setString(1, course.getCourseName());
-            
-            // Execute the query
-            int rowsInserted = statement.executeUpdate();
-            
-            // Return true if the course was added successfully
-            return (rowsInserted > 0);
-        } catch (SQLException ex) {
-            // Handle any exceptions that occur during the database operation
-            ex.printStackTrace();
-            return false;
+
+    public void addCourse(Course course) throws SQLException {
+        String sql = "INSERT INTO courses (name) VALUES (?)";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setString(1, course.getName());
+
+        // Execute the statement
+        statement.executeUpdate();
+    }
+
+    public List<Course> getAllCourses() throws SQLException {
+        String sql = "SELECT * FROM courses";
+        Statement statement = conn.createStatement();
+
+        ResultSet rs = statement.executeQuery(sql);
+
+        List<Course> courses = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            courses.add(new Course(id, name));
         }
+
+        return courses;
+    }
+
+    public void deleteCourse(int courseId) throws SQLException {
+        String sql = "DELETE FROM courses WHERE id = ?";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setInt(1, courseId);
+
+        statement.executeUpdate();
     }
 }
